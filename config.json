@@ -1,0 +1,21 @@
+{
+  "Title": "ComBoost",
+  "Icon": "log-32.png",
+  "BaseUrl": "",
+  "Path": "",
+  "IsRawHtmlEnabled": true,
+  "Languages": [
+    {
+      "Name": "简体中文",
+      "Value": "zh-cn",
+      "CatalogText": "本文内容"
+    }
+  ],
+  "Versions": [
+    {
+      "Name": "ComBoost 4.0",
+      "Value": "4.0",
+      "Path": "4.0"
+    }
+  ]
+}

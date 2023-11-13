@@ -1,0 +1,106 @@
+﻿{
+  "ComBoost简介": {
+    "Path": "index"
+  },
+  "教程": {
+    "Children": {
+      "解决方案结构": {
+        "Path": "tutorial/solutionstructure"
+      },
+      "领域项目": {
+        "Path": "tutorial/domainproject"
+      },
+      "Web项目": {
+        "Path": "tutorial/webproject"
+      },
+      "测试项目": {
+        "Path": "tutorial/testing"
+      }
+    }
+  },
+  "领域": {
+    "Path": "domain/",
+    "Children": {
+      "领域服务": {
+        "Path": "domain/service"
+      },
+      "领域服务模板": {
+        "Path": "domain/servicetemplate"
+      },
+      "领域服务事件": {
+        "Path": "domain/serviceevent"
+      },
+      "领域服务过滤器": {
+        "Path": "domain/servicefilter"
+      }
+    }
+  },
+  "分布式服务": {
+    "Children": {
+      "远程调用": {
+        "Children": {
+          "gRPC": {
+            "Path": "distributed/remoting/grpc"
+          }
+        }
+      },
+      "分布式领域服务事件": {
+        "Path": "distributed/event"
+      }
+    }
+  },
+  "数据": {
+    "Children": {
+      "实体上下文": {
+        "Path": "data/entity"
+      },
+      "实体领域服务": {
+        "Path": "data/entitydomainservice"
+      }
+    }
+  },
+  "集成": {
+    "Children": {
+      "通用主机": {
+        "Path": "integration/generic"
+      },
+      "ASP.NET Core": {
+        "Path": "integration/aspnetcore/",
+        "Children": {
+          "Mvc": {
+            "Path": "integration/aspnetcore/mvc"
+          }
+        }
+      }
+    }
+  },
+  "基础设施": {
+    "Children": {
+      "领域上下文": {
+        "Path": "infrastructure/domaincontext"
+      },
+      "值提供器": {
+        "Path": "infrastructure/valueprovider"
+      },
+      "领域上下文提供器": {
+        "Path": "infrastructure/domaincontextprovider"
+      },
+      "领域执行上下文": {
+        "Path": "infrastructure/domainexecutioncontext"
+      },
+      "身份授权": {
+        "Path": "infrastructure/authorization"
+      }
+    }
+  },
+  "测试": {
+    "Children": {
+      "集成测试": {
+        "Path": "testing/integration"
+      }
+    }
+  },
+  "最新构建版本": {
+    "Path": "latest"
+  }
+}
