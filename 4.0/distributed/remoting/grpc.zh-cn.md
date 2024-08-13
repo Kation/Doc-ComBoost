@@ -43,6 +43,70 @@ builder.Services.AddComBoost()
     });
 ```
 
+### 自定义序列化
+`ComBoost`通过接口`IDomainGrpcMethodBuilder`来创建gRPC方法，默认使用`DomainGrpcMethodProtobufBuilder`。
+```
+public interface IDomainGrpcMethodBuilder
+{
+    Method<TRequest, TResponse> CreateMethod<TRequest, TResponse>(string serviceName, string methodName);
+}
+```
+可以对全局gRPC服务或单个gRPC服务配置MethodBuilder。
+```csharp
+builder.Services.AddComBoost()
+    .AddGrpcService(builder =>
+    {
+        builder.UseMethodBuilder<MethodBuilder1>();
+        
+        builder.AddService(new Uri("https://serviceB/"))
+            .UseMethodBuilder<MethodBuilder2>()
+            .UseTemplate<YourServiceTemplateB>();
+    });
+```
+JSON序列化例子
+```
+public class JsonMethodBuilder : IDomainGrpcMethodBuilder
+{
+    public Method<TRequest, TResponse> CreateMethod<TRequest, TResponse>(string serviceName, string methodName)
+    {
+        return new Method<TRequest, TResponse>(MethodType.Unary, serviceName, methodName, new Marshaller<TRequest>(request =>
+        {
+            return JsonSerializer.SerializeToUtf8Bytes(request);
+        }, data =>
+        {
+            return JsonSerializer.Deserialize<TRequest>(data);
+        }), new Marshaller<TResponse>(response =>
+        {
+            return JsonSerializer.SerializeToUtf8Bytes(response);
+        }, data =>
+        {
+            return JsonSerializer.Deserialize<TResponse>(data);
+        }));
+    }
+}
+```
+
+### 自定义CallOptions处理
+`ComBoost`通过接口`IDomainGrpcCallOptionsHandler`可以实现针对`领域服务模板`级别的`CallOptions`处理。
+```
+public interface IDomainGrpcCallOptionsHandler
+{
+    void Handle(Type service, ref CallOptions callOptions);
+}
+```
+可以对全局gRPC服务或单个gRPC服务进行配置。
+```csharp
+builder.Services.AddComBoost()
+    .AddGrpcService(builder =>
+    {
+        builder.UseCallOptionsHandler<MethodBuilder1>();
+        
+        builder.AddService(new Uri("https://serviceB/"))
+            .UseCallOptionsHandler<MethodBuilder2>()
+            .UseTemplate<YourServiceTemplateB>();
+    });
+```
+
 ## gRPC服务端
 `ComBoost`基于ASP.NET Core的gRPC功能提供服务。
 项目需要添加Nuget包[`Wodsoft.ComBoost.Grpc.AspNetCore`](https://www.nuget.org/packages/Wodsoft.ComBoost.Grpc.AspNetCore)。
@@ -99,6 +163,47 @@ builder.Services.AddComBoost()
 ###### :information_source:备注
 身份信息透传或自定义身份信息会互相覆盖，只有最后一次调用的生效。
 :::
+
+### 自定义序列化
+`ComBoost`通过接口`IDomainGrpcMethodBuilder`来创建gRPC方法，默认使用`DomainGrpcMethodProtobufBuilder`。
+```
+public interface IDomainGrpcMethodBuilder
+{
+    Method<TRequest, TResponse> CreateMethod<TRequest, TResponse>(string serviceName, string methodName);
+}
+```
+在服务端种，MethodBuilder对全局gRPC服务生效。
+```csharp
+builder.Services.AddComBoost()
+    .AddAspNetCore(builder =>
+    {
+        builder.AddGrpcServices()
+            .UseMethodBuilder<MethodBuilder1>()
+            .AddAuthenticationPassthrough();
+    });
+```
+JSON序列化例子
+```
+public class JsonMethodBuilder : IDomainGrpcMethodBuilder
+{
+    public Method<TRequest, TResponse> CreateMethod<TRequest, TResponse>(string serviceName, string methodName)
+    {
+        return new Method<TRequest, TResponse>(MethodType.Unary, serviceName, methodName, new Marshaller<TRequest>(request =>
+        {
+            return JsonSerializer.SerializeToUtf8Bytes(request);
+        }, data =>
+        {
+            return JsonSerializer.Deserialize<TRequest>(data);
+        }), new Marshaller<TResponse>(response =>
+        {
+            return JsonSerializer.SerializeToUtf8Bytes(response);
+        }, data =>
+        {
+            return JsonSerializer.Deserialize<TResponse>(data);
+        }));
+    }
+}
+```
 
 ### 映射关系
 `ComBoost`使用`/{templateName}/{methodName}`作为gRPC服务的入口点。  
